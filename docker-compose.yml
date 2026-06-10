@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  web:
+    build: . 
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=mondongo_db
+      - DB_USER=Osiris_God
+      - DB_PASSWORD=12345
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    container_name: mondongo_Base
+    environment:
+      POSTGRES_DB: mondongo_db
+      POSTGRES_USER: Osiris_God
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  db_backup:
+    image: prodrigestivill/postgres-backup-local
+    container_name: mondongo_backup
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: mondongo_db
+      POSTGRES_USER: Osiris_God
+      POSTGRES_PASSWORD: 12345
+      SCHEDULE: '@daily' 
+      BACKUP_KEEP_DAYS: 7 
+    volumes:
+      - ./backups:/var/xgcalendar/backups 
+    depends_on:
+      - db
+
+volumes:
+  postgres_data: 
