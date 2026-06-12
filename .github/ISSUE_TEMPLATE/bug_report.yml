@@ -1,0 +1,68 @@
+name: 🐛 Reporte de Bug (Formulario)
+description: Informa sobre un error en Mondongo Burgers usando casillas y campos interactivos.
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 🍔 Central de Reportes - Mondongo Burgers
+        Gracias por reportar el problema. Por favor, rellena los campos y marca los "cheques" correspondientes para ayudarte a solucionarlo rápido.
+
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: 📝 Descripción del problema
+      description: ¿Qué está fallando exactamente en el sistema?
+      placeholder: Ejemplo: Al ejecutar kubectl apply el clúster se queda congelado o DBeaver da error de sintaxis...
+    validations:
+      required: true
+
+  - type: textarea
+    id: pasos
+    attributes:
+      label: 🔄 Pasos para recrear el error
+      description: Escribe el paso a paso de lo que estabas haciendo en tu terminal o VS Code.
+      placeholder: |
+        1. Abrí la PowerShell en la ruta del proyecto.
+        2. Corrí el comando 'docker build...'
+        3. La terminal arrojó el error X.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: componente
+    attributes:
+      label: 🧩 ¿Dónde ocurre el fallo?
+      description: Selecciona la capa del microservicio que está dando problemas.
+      options:
+        - "Base de Datos (PostgreSQL / DBeaver / init.sql)"
+        - "API Web (Flask / Python / app.py)"
+        - "Contenedores (Docker / Dockerfile / Docker Compose)"
+        - "Orquestación (Kubernetes / Manifiestos YAML)"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: verificaciones
+    attributes:
+      label: 🗹 Lista de Chequeo Técnico (Pre-requisitos)
+      description: Marca las casillas para confirmar que validaste el estado de tu entorno local.
+      options:
+        - label: "Ya verifiqué que el icono de Kubernetes en Docker Desktop está en VERDE (Running)."
+          required: true
+        - label: "Aseguré que mi archivo `.env` tiene las credenciales correctas ('Osiris_God' / '12345')."
+          required: true
+        - label: "Revisé que no tengo tablas duplicadas o con tildes en DBeaver."
+          required: false
+        - label: "Corrí el comando `kubectl get pods` para revisar el estado actual de los contenedores."
+          required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 📋 Logs de la Terminal o Errores
+      description: Pega aquí el bloque de texto con el error exacto que te dio la consola si lo tienes.
+      placeholder: "Error: couldn't get current server API group list..."
+    validations:
+      required: false
