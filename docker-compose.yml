@@ -24,6 +24,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      # Volumen compartido para backups
+      - mondongo_backups_shared:/backups
 
   db_backup:
     image: prodrigestivill/postgres-backup-local
@@ -36,9 +38,11 @@ services:
       SCHEDULE: '@daily' 
       BACKUP_KEEP_DAYS: 7 
     volumes:
-      - ./backups:/var/xgcalendar/backups 
+      # Volumen compartido para que los backaps se guarden
+      - mondongo_backups_shared:/backups 
     depends_on:
       - db
 
 volumes:
   postgres_data: 
+  mondongo_backups_shared: # Declaración del nuevo volumen compartido
