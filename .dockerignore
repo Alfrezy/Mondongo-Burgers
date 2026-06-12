@@ -1,0 +1,34 @@
+# 🙈 CONTRASEÑAS Y SECRETOS (CRÍTICO)
+.env
+*.env
+postgres-secret.yaml
+
+# 🐍 BASURA DE PYTHON Y ENTORNOS VIRTUALES
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+env/
+ENV/
+
+# ☸️ MANIFIESTOS DE KUBERNETES Y DOCKER COMPOSE
+# (Tu contenedor dentro de K8s no necesita saber cómo K8s lo orquesta)
+*.yaml
+*.yml
+Dockerfile
+.dockerignore
+
+# 📋 DOCUMENTACIÓN Y REPOSITORIO
+.git/
+.gitignore
+README.md
+LICENSE
+
+# 🛠️ CONFIGURACIÓN DEL EDITOR (VS Code / Windows)
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
