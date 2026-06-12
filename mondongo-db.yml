@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mondongo-web-app
+spec:
+  replicas: 2 # ¡Aquí sí podemos meter varias réplicas para alta disponibilidad!
+  selector:
+    matchLabels:
+      app: mondongo-web
+  template:
+    metadata:
+      labels:
+        app: mondongo-web
+    spec:
+      containers:
+        - name: web-app
+          image: mondongo-app:latest
+          # IMPORTANTE: Le dice a K8s que busque la imagen en tu PC y no en internet
+          imagePullPolicy: Never 
+          ports:
+            - containerPort: 5000 # El puerto donde corre tu Flask/Python
+          env:
+            - name: DB_HOST
+              value: "mondongo-base-service" # El nombre del servicio de tu Postgres
+            - name: DB_PORT
+              value: "5432"
+            # Jalamos los datos directamente del Secret que ya tenías creado
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+
+---
+# El puente para ver tu app desde el navegador en Windows
+apiVersion: v1
+kind: Service
+metadata:
+  name: mondongo-web-service
+spec:
+  type: NodePort
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30001 # Podrás entrar desde http://localhost:30001
+  selector:
+    app: mondongo-web
