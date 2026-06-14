@@ -32,3 +32,9 @@ LICENSE
 .idea/
 Thumbs.db
 .DS_Store
+
+# .dockerignore
+SegurityKey/
+.env
+backups/
+.git/

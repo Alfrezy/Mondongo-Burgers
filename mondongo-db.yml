@@ -14,16 +14,16 @@ spec:
     spec:
       containers:
         - name: web-app
-          image: mondongo-app:latest
-          # IMPORTANTE: Le dice a K8s que busque la imagen en tu PC y no en internet
-          imagePullPolicy: Never 
+          image: mondongo-app:1.0 # <-- Cambiado de latest a 1.0 para asegurar el rastreo local
+          imagePullPolicy: IfNotPresent # <-- K8s usará la imagen de tu PC sin bloquearse buscando en internet
           ports:
-            - containerPort: 5000 # El puerto donde corre tu Flask/Python
+            - containerPort: 5000 # El puerto donde corre tu backend de Python
           env:
             - name: DB_HOST
-              value: "mondongo-base-service" # El nombre del servicio de tu Postgres
+              value: "host.docker.internal" # <-- Dirección mágica para conectar con el Postgres de tu Windows
             - name: DB_PORT
               value: "5432"
+            # Jalamos las credenciales seguras directamente de tu Secret de Kubernetes
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -39,9 +39,21 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
+          
+          # == AQUÍ SE MONTA TU IMAGEN DE REZE DENTRO DEL CONTENEDOR ==
+          volumeMounts:
+            - name: llave-volumen
+              mountPath: /app/SegurityKey # Coincide exactamente con tu carpeta con "g"
+              readOnly: true
+      
+      # == DECLARAMOS EL VOLUMEN QUE JALA DESDE EL CONFIGMAP ==
+      volumes:
+        - name: llave-volumen
+          configMap:
+            name: reze-key-config
 
 ---
-# El puente para ver tu app desde el navegador en Windows
+# El puente de red para ver tu aplicación desde el navegador en Windows
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,6 +63,6 @@ spec:
   ports:
     - port: 5000
       targetPort: 5000
-      nodePort: 30001 # Podrás entrar desde http://localhost:30001
+      nodePort: 30001 # Podrás entrar desde tu navegador a http://localhost:30001
   selector:
     app: mondongo-web
