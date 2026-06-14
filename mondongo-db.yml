@@ -24,7 +24,6 @@ spec:
               value: "mondongo-base-service" # El nombre del servicio de tu Postgres
             - name: DB_PORT
               value: "5432"
-            # Jalamos los datos directamente del Secret que ya tenías creado
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
